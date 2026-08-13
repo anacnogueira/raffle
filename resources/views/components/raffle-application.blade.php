@@ -1,6 +1,8 @@
 <?php
 
 use Livewire\Component;
+use App\Models\Applicant;
+use App\Models\Raffle;
 
 new class extends Component {
     public ?string $email = null;
@@ -8,7 +10,10 @@ new class extends Component {
 
     public function save()
     {
-        // cria o registro
+        Applicant::create([
+            'raffle_id' => Raffle::first()->id,
+            'email' => $this->email,
+        ]);
         $this->success = true;
     }
 };
