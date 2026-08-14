@@ -10,7 +10,8 @@ use Illuminate\Support\Collection;
 
 new class extends Component {
     public ?Raffle $raffle = null;
-    public ?string $email = '';
+    public ?string $email = null;
+    public ?string $winner = null;
     public bool $success = false;
 
     public function mount(): void
@@ -40,6 +41,12 @@ new class extends Component {
     {
         return $this->raffle->applicants ? $this->raffle->applicants->map(fn($applicant) => preg_replace('/(?<=.{2}).(?=.*@)/u', '*', $applicant->email)) : Collection::empty();
     }
+
+    public function getWinner(): void
+    {
+        $winner = $this->raffle->applicants()->inRandomOrder()->first();
+        $this->winner = $winner ? $winner->email : null;
+    }
 };
 ?>
 
@@ -67,4 +74,13 @@ new class extends Component {
             @endforeach
         </ul>
     </div>
+    <br />
+    @if ($winner)
+        <div class="border border-gray-200 rounded-lg p-4">
+            <h3 class="text-lg font-medium text-gray-800 mb-4">The Winner is</h3>
+            <p>{{ $winner }}</p>
+        </div>
+    @else
+        <x-ui.button type="button" class="mt-4" wire:click="getWinner">Draw the winner</x-ui.button>
+    @endif
 </div>
