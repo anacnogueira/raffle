@@ -2,9 +2,11 @@
 
 use Livewire\Component;
 use Livewire\Attributes\Validate;
+use Livewire\Attributes\Computed;
 use Illuminate\Validation\Rule;
 use App\Models\Applicant;
 use App\Models\Raffle;
+use Illuminate\Support\Collection;
 
 new class extends Component {
     public ?Raffle $raffle = null;
@@ -32,6 +34,12 @@ new class extends Component {
         ]);
         $this->success = true;
     }
+
+    #[Computed]
+    public function participants(): Collection
+    {
+        return $this->raffle->applicants ? $this->raffle->applicants->map(fn($applicant) => preg_replace('/(?<=.{2}).(?=.*@)/u', '*', $applicant->email)) : Collection::empty();
+    }
 };
 ?>
 
@@ -49,4 +57,14 @@ new class extends Component {
             <x-ui.button type="submit" class="mt-4">Submit</x-ui.button>
         </form>
     @endif
+
+    <br>
+    <div class="border border-gray-200 rounded-lg p-4">
+        <h3 class="text-lg font-medium text-gray-800 mb-4">Participants</h3>
+        <ul class="divide-y divide-gray-100">
+            @foreach ($this->participants as $participant)
+                <li class="py-2 px-2 hover:bg-gray-50">{{ $participant }}</li>
+            @endforeach
+        </ul>
+    </div>
 </div>
