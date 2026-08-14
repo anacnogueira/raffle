@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::livewire('/', 'raffle-application');
+Route::livewire('/login', 'auth/login')->name('login');
 
-Route::livewire('/teste', 'counter');
+Route::middleware('auth')->group(function() {
+    Route::livewire('/', 'raffle-application')->name('home');
+})
