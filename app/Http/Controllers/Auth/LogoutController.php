@@ -13,7 +13,7 @@ class LogoutController
         auth()->logout();
         session()->invalidate();
         session()->regenerateToken();
-        return Route::redirect('login');
+        return redirect()->route('login');
     }
 
 }

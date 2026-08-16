@@ -10,5 +10,7 @@ Route::livewire('/', 'raffle-application')->name('home');
 
 Route::middleware('auth')->group(function() {
     Route::get('/logout', LogoutController::class)->name('logout');
-    Route::livewire('/admin/raffle', 'page/admin/raffle')->name('admin.raffle');
+    Route::livewire('/admin/raffle', 'page/admin/raffle')
+        ->middleware('can:admin')
+        ->name('admin.raffle');
 });
