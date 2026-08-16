@@ -1,11 +1,14 @@
 <?php
 
+use App\Http\Controllers\Auth\LogoutController;
 use Illuminate\Support\Facades\Route;
 
-Route::livewire('/login', 'auth/login')->name('login');
+Route::livewire('/login', 'page/auth/login')->name('login');
+
 Route::livewire('/', 'raffle-application')->name('home');
 
 
 Route::middleware('auth')->group(function() {
-     Route::livewire('/admin/raffle', 'page/admin/raffle')->name('admin.raffle');
+    Route::get('/logout', LogoutController::class)->name('logout');
+    Route::livewire('/admin/raffle', 'page/admin/raffle')->name('admin.raffle');
 });
