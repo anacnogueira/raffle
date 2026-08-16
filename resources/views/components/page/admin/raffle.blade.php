@@ -6,5 +6,5 @@ new class extends Component {};
 ?>
 
 <div>
-    Admin Aqui
+    <livewire:raffle.table />
 </div>
