@@ -2,18 +2,22 @@
 
 use Livewire\Component;
 use Livewire\Attributes\Computed;
-use Livewire\Features\SupportPagination\HandlesPagination;
+use Livewire\Attributes\On;
+use Livewire\WithPagination;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use App\Models\Raffle;
 
 new class extends Component {
-    use HandlesPagination;
+    use WithPagination;
+
+    #[On('raffle::refresh')]
+    public function mount() {}
 
     #[Computed]
     public function records(): LengthAwarePaginator
     {
-        return Raffle::query()->paginate();
+        return Raffle::query()->orderBy('id', 'desc')->paginate();
     }
 };
 ?>
