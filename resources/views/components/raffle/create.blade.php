@@ -3,9 +3,12 @@
 use Livewire\Component;
 use Livewire\Attributes\On;
 use App\Models\Raffle;
+use Livewire\Attributes\Validate;
 
 new class extends Component {
     public bool $modal = false;
+
+    #[Validate(['required', 'string', 'min:5', 'max:255', 'unique:raffles,name'])]
     public string $name = '';
 
     #[On('raffle::create')]
@@ -16,6 +19,8 @@ new class extends Component {
 
     public function handle(): void
     {
+        $this->validate();
+
         Raffle::create([
             'name' => $this->name,
         ]);
@@ -31,7 +36,7 @@ new class extends Component {
         <x-ui.modal title="Create New Raffle">
             <div>
                 <form wire:submit="handle" class="space-y-4">
-                    <x-ui.input label="Name" name="name" type="text" wire:model.defer="name"
+                    <x-ui.input label="Name" name="name" type="text" wire:model.lazy="name"
                         placeholder="Entre Raffle name" />
                     <x-ui.button type="submit" class="w-full" wire:loadding.attr="disabled"
                         wire:target="handle">Save</x-ui.button>
