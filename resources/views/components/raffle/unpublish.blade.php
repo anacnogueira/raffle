@@ -7,19 +7,18 @@ use App\Models\Raffle;
 new class extends Component {
     public bool $modal = false;
 
-    public ?int $id = null;
+    public ?Raffle $raffle = null;
 
     #[On('raffle::unpublish')]
     public function open(int $id): void
     {
         $this->modal = true;
-        $raffle = Raffle::findOrFail($id);
-        $this->id = $raffle->id;
+        $this->raffle = Raffle::findOrFail($id);
     }
 
     public function handle(): void
     {
-        Raffle::where('id', $this->id)->update([
+        $this->raffle->update([
             'published_at' => null,
         ]);
 
@@ -30,7 +29,7 @@ new class extends Component {
 ?>
 <div>
     @if ($modal)
-        <x-ui.modal title="Unpublishing Raffle #{{ $id }}">
+        <x-ui.modal title="Unpublishing Raffle #{{ $raffle->id }}">
             <p class="text-blue-700 font-bold mb-4 bg-blue-200 rounded border-2 border-blue-400 p-4">
                 Are you sure you want to unpublish this raffle?
             </p>

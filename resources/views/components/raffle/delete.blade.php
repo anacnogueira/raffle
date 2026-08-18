@@ -7,19 +7,18 @@ use App\Models\Raffle;
 new class extends Component {
     public bool $modal = false;
 
-    public ?int $id = null;
+    public ?Raffle $raffle = null;
 
     #[On('raffle::delete')]
     public function open(int $id): void
     {
         $this->modal = true;
-        $raffle = Raffle::findOrFail($id);
-        $this->id = $raffle->id;
+        $this->raffle = Raffle::findOrFail($id);
     }
 
     public function handle(): void
     {
-        Raffle::where('id', $this->id)->delete();
+        $this->raffle->delete();
 
         $this->dispatch('raffle::refresh');
         $this->reset();
@@ -28,7 +27,7 @@ new class extends Component {
 ?>
 <div>
     @if ($modal)
-        <x-ui.modal title="Deleting Raffle #{{ $id }}">
+        <x-ui.modal title="Deleting Raffle #{{ $raffle->id }}">
             <p class="text-red-700 font-bold mb-4 bg-red-200 rounded border-2 border-red-400 p-4">
                 Are you sure you want to delete this raffle? This action cannot be undone.
             </p>
