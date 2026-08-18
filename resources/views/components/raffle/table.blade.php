@@ -49,13 +49,16 @@ new class extends Component {
                             <x-ui.button @click="$dispatch('raffle::publish', { id: {{ $record->id }}})">
                                 Publish
                             </x-ui.button>
-
-                @endif
-                </x-ui.table.td>
+                        @else
+                            <x-ui.button @click="$dispatch('raffle::unpublish', { id: {{ $record->id }}})">
+                                Unpublish
+                            </x-ui.button>
+                        @endunless
+                    </x-ui.table.td>
                 </x-ui.table.tr>
-                @endforeach
-            </x-ui.table.tbody>
-        </x-ui.table>
+            @endforeach
+        </x-ui.table.tbody>
+    </x-ui.table>
 
-        {{ $this->records->links() }}
-    </div>
+    {{ $this->records->links() }}
+</div>
