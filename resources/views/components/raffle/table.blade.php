@@ -42,15 +42,16 @@ new class extends Component {
                     <x-ui.table.td>{{ $record->name }}</x-ui.table.td>
                     <x-ui.table.td>{{ $record->published_at ? 'Yes' : 'No' }}</x-ui.table.td>
                     <x-ui.table.td>
-                        <x-ui.button @click="$dispatch('raffle::edit', { id: {{ $record->id }}})">Edit</x-ui.button>
-                        <x-ui.button
+                        <x-ui.button secondary
+                            @click="$dispatch('raffle::edit', { id: {{ $record->id }}})">Edit</x-ui.button>
+                        <x-ui.button secondary
                             @click="$dispatch('raffle::delete', { id: {{ $record->id }}})">Delete</x-ui.button>
                         @unless ($record->published_at)
-                            <x-ui.button @click="$dispatch('raffle::publish', { id: {{ $record->id }}})">
+                            <x-ui.button secondary @click="$dispatch('raffle::publish', { id: {{ $record->id }}})">
                                 Publish
                             </x-ui.button>
                         @else
-                            <x-ui.button @click="$dispatch('raffle::unpublish', { id: {{ $record->id }}})">
+                            <x-ui.button secondary @click="$dispatch('raffle::unpublish', { id: {{ $record->id }}})">
                                 Unpublish
                             </x-ui.button>
                         @endunless

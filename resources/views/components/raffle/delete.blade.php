@@ -34,9 +34,9 @@ new class extends Component {
             </p>
 
             <div class="flex items-center justify-between">
-                <x-ui.button type="button" wire:click="$set('modal', false)" class="bg-gray-400">No... I'm
+                <x-ui.button secondary wire:click="$set('modal', false)" class="bg-gray-400">No... I'm
                     OK</x-ui.button>
-                <x-ui.button type="button" wire:click="handle" wire:loading.attr="disabled" wire:target="handle">Yes,
+                <x-ui.button danger wire:click="handle" wire:loading.attr="disabled" wire:target="handle">Yes,
                     delete it!</x-ui.button>
             </div>
         </x-ui.modal>
