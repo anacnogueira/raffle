@@ -19,6 +19,7 @@ class RaffleFactory extends Factory
     {
         return [
             'name' => fake()->sentence(3),
+            'published_at' => fake()->optional(0.7)->dateTimeBetween('-1 year', '+1 year')
         ];
     }
 }

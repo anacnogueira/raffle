@@ -9,7 +9,7 @@ new class extends Component {
 
     public ?int $id = null;
 
-    #[On('raffle::publish')]
+    #[On('raffle::unpublish')]
     public function open(int $id): void
     {
         $this->modal = true;
@@ -20,7 +20,7 @@ new class extends Component {
     public function handle(): void
     {
         Raffle::where('id', $this->id)->update([
-            'published_at' => now(),
+            'published_at' => null,
         ]);
 
         $this->dispatch('raffle::refresh');
@@ -30,9 +30,9 @@ new class extends Component {
 ?>
 <div>
     @if ($modal)
-        <x-ui.modal title="Publishing Raffle #{{ $id }}">
+        <x-ui.modal title="Unpublishing Raffle #{{ $id }}">
             <p class="text-blue-700 font-bold mb-4 bg-blue-200 rounded border-2 border-blue-400 p-4">
-                Are you sure you want to publish this raffle?
+                Are you sure you want to unpublish this raffle?
             </p>
 
             <div class="flex items-center justify-between">
