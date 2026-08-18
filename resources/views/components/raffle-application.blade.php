@@ -14,9 +14,9 @@ new class extends Component {
     public ?string $winner = null;
     public bool $success = false;
 
-    public function mount(): void
+    public function mount(Raffle $raffle): void
     {
-        $this->raffle = Raffle::InRandomOrder()->first();
+        $this->raffle = $raffle;
     }
 
     public function rules(): array
