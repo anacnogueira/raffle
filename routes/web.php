@@ -6,8 +6,6 @@ use Illuminate\Support\Facades\Route;
 Route::livewire('/login', 'page/auth/login')->name('login');
 
 Route::livewire('/', 'home')->name('home');
-Route::livewire('/{raffle}', 'raffle-application')->name('raffle.application');
-
 
 Route::middleware('auth')->group(function() {
     Route::get('/logout', LogoutController::class)->name('logout');
@@ -15,3 +13,5 @@ Route::middleware('auth')->group(function() {
         ->middleware('can:admin')
         ->name('admin.raffle');
 });
+
+Route::livewire('/{raffle}', 'raffle-application')->name('raffle.application');

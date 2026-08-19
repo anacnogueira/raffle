@@ -16,6 +16,7 @@ new class extends Component {
 
     public function mount(Raffle $raffle): void
     {
+        $this->authorize('onlyPublished', $raffle);
         $this->raffle = $raffle;
     }
 
