@@ -46,6 +46,10 @@ new class extends Component {
     public function getWinner(): void
     {
         $this->authorize('drawWinner', $this->raffle);
+        if ($this->raffle->applicants()->count() < 2) {
+            $this->addError('winner', 'At least two participants are required to perform the draw.');
+            return;
+        }
         $winner = $this->raffle->applicants()->inRandomOrder()->first();
 
         $this->winner = $winner ? $winner->email : null;
@@ -93,6 +97,7 @@ new class extends Component {
         </div>
     @else
         @can('drawWinner', $raffle)
+            <x-ui.error name="winner" />
             <x-ui.button type="button" class="mt-4" wire:click="getWinner">Draw the winner</x-ui.button>
         @endcan
     @endif

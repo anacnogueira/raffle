@@ -3,9 +3,4 @@
     <input {{ $attributes }}
         class="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
 
-    @error($attributes->get('name'))
-        <div class="text-red-500 text-sm mt-2">
-            {{ $message }}
-        </div>
-    @enderror
-</div>
+    <x-ui.error name="{{ $attributes->get('name') }}" />
