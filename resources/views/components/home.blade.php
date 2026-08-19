@@ -9,17 +9,27 @@ new class extends Component {
     #[Computed]
     public function raffles(): Collection
     {
-        return Raffle::query()->whereNotNull('published_at')->orderBy('id', 'desc')->get();
+        return Raffle::query()->withCount('applicants')->whereNotNull('published_at')->orderBy('id', 'desc')->get();
     }
 };
 ?>
 
-<div>
+<div class="grid grid-cols-3 gap-4">
     @foreach ($this->raffles as $raffle)
-        <p>
-            <a class="hover:underline hover:text-blue-400" href="{{ route('raffle.application', $raffle) }}">
-                {{ $raffle->id }} - {{ $raffle->name }}
-            </a>
-        </p>
+        <x-ui.card href="{{ route('raffle.application', $raffle) }}">
+            <h1 class="text-lg font-bold mb-4">
+                {{ $raffle->id }} - {{ Str::limit($raffle->name, 10) }}
+            </h1>
+
+            <div class="h-full flex flex-col justify-between space-y-4">
+                <p class="text-sm ">
+                    {{ $raffle->applicants_count }} participants
+                </p>
+
+                <x-ui.button>
+                    Join Now
+                </x-ui.button>
+            </div>
+        </x-ui.card>
     @endforeach
 </div>
