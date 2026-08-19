@@ -45,6 +45,7 @@ new class extends Component {
 
     public function getWinner(): void
     {
+        $this->authorize('drawWinner', $this->raffle);
         $winner = $this->raffle->applicants()->inRandomOrder()->first();
         $this->winner = $winner ? $winner->email : null;
     }
@@ -82,6 +83,9 @@ new class extends Component {
             <p>{{ $winner }}</p>
         </div>
     @else
-        <x-ui.button type="button" class="mt-4" wire:click="getWinner">Draw the winner</x-ui.button>
+        @can('drawWinner', $raffle)
+            <x-ui.button type="button" class="mt-4" wire:click="getWinner">Draw the winner</x-ui.button>
+        @endcan
     @endif
+
 </div>
