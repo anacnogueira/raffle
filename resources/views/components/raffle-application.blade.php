@@ -42,12 +42,6 @@ new class extends Component {
         return $this->raffle->applicants()->get()->map(fn($applicant) => preg_replace('/(?<=.{2}).(?=.*@)/u', '*', $applicant->email));
     }
 
-    #[Computed]
-    public function winners(): Collection
-    {
-        return $this->raffle->winners()->with('applicant')->get();
-    }
-
     public function getWinner(): void
     {
         $this->authorize('drawWinner', $this->raffle);
@@ -97,20 +91,13 @@ new class extends Component {
         </ul>
     </div>
     <br />
-    @if ($this->winners)
-        <div
-            class="relative flex flex-col items-center justify-center p-4 bg-blue-100 dark:bg-blue-900 border border-blue-400 dark:border-blue-600 rounded-lg">
 
-            <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">The winner is:</h1>
-            @foreach ($this->winners as $winner)
-                <p class="mt-2 text-gray-700 dark:text-gray-300">{{ $winner->applicant->email }}</p>
-            @endforeach
-        </div>
-    @else
-        @can('drawWinner', $raffle)
-            <x-ui.error name="winner" />
-            <x-ui.button type="button" class="mt-4" wire:click="getWinner">Draw the winner</x-ui.button>
-        @endcan
-    @endif
+    <livewire:raffle.winners :raffle="$raffle" />
+
+
+    @can('drawWinner', $raffle)
+        <x-ui.error name="winner" />
+        <x-ui.button type="button" class="mt-4" wire:click="getWinner">Draw the winner</x-ui.button>
+    @endcan
 
 </div>
