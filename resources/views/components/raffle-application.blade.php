@@ -30,8 +30,7 @@ new class extends Component {
     public function save()
     {
         $this->validate();
-        Applicant::create([
-            'raffle_id' => $this->raffle->id,
+        $this->raffle->applicants()->create([
             'email' => $this->email,
         ]);
         $this->success = true;
@@ -40,7 +39,13 @@ new class extends Component {
     #[Computed]
     public function participants(): Collection
     {
-        return $this->raffle->applicants ? $this->raffle->applicants->map(fn($applicant) => preg_replace('/(?<=.{2}).(?=.*@)/u', '*', $applicant->email)) : Collection::empty();
+        return $this->raffle->applicants()->get()->map(fn($applicant) => preg_replace('/(?<=.{2}).(?=.*@)/u', '*', $applicant->email));
+    }
+
+    #[Computed]
+    public function winners(): Collection
+    {
+        return $this->raffle->winners()->with('applicant')->get();
     }
 
     public function getWinner(): void
@@ -50,9 +55,14 @@ new class extends Component {
             $this->addError('winner', 'At least two participants are required to perform the draw.');
             return;
         }
-        $winner = $this->raffle->applicants()->inRandomOrder()->first();
 
-        $this->winner = $winner ? $winner->email : null;
+        $winners = $this->raffle->winners()->pluck('applicant_id')->toArray();
+        $winner = $this->raffle->applicants()->whereNotIn('id', $winners)->inRandomOrder()->first();
+
+        if (!$winner) {
+            $this->addError('winner', 'No more participants available for the draw.');
+            return;
+        }
 
         $this->raffle->winners()->create([
             'applicant_id' => $winner->id,
@@ -64,9 +74,10 @@ new class extends Component {
 <div>
     <h1 class="text-2xl font-bold mb-4">Raffle Application :: {{ $raffle->name }}</h1>
     @if ($success)
-        <div class="flex flex-col items-center justify-center p-4 bg-green-100 border-1 rounded-lg border-green-300">
-            <h1 class="text-2xl font-bold">Thank you for your submisstion</h1>
-            <p class="mt-2">We will contact you soon.</p>
+        <div
+            class="flex flex-col items-center justify-center p-4 bg-green-100 dark:bg-green-900 border border-green-400 dark:border-green-600 rounded-lg">
+            <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">Thank you for your submission!</h1>
+            <p class="mt-2 text-gray-700 dark:text-gray-300">We will contact you soon.</p>
         </div>
     @else
         <form wire:submit="save">
@@ -81,19 +92,19 @@ new class extends Component {
         <h3 class="text-lg font-medium text-gray-800 mb-4 dark:text-gray-300">Participants</h3>
         <ul class="divide-y divide-gray-100">
             @foreach ($this->participants as $participant)
-                <li class="py-2 px-2 hover:bg-gray-50">{{ $participant }}</li>
+                <li class="hover:bg-gray-50 dark:hover:bg-gray-800">{{ $participant }}</li>
             @endforeach
         </ul>
     </div>
     <br />
-    @if ($winner)
+    @if ($this->winners)
         <div
             class="relative flex flex-col items-center justify-center p-4 bg-blue-100 dark:bg-blue-900 border border-blue-400 dark:border-blue-600 rounded-lg">
 
             <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">The winner is:</h1>
-
-            <p class="mt-2 text-gray-700 dark:text-gray-300">{{ $winner }}</p>
-
+            @foreach ($this->winners as $winner)
+                <p class="mt-2 text-gray-700 dark:text-gray-300">{{ $winner->applicant->email }}</p>
+            @endforeach
         </div>
     @else
         @can('drawWinner', $raffle)

@@ -9,7 +9,7 @@ new class extends Component {
     #[Computed]
     public function raffles(): Collection
     {
-        return Raffle::query()->withCount('applicants')->whereNotNull('published_at')->orderBy('id', 'desc')->get();
+        return Raffle::query()->withCount('applicants', 'winners')->whereNotNull('published_at')->orderBy('id', 'desc')->get();
     }
 };
 ?>
@@ -25,6 +25,11 @@ new class extends Component {
                 <p class="text-sm ">
                     {{ $raffle->applicants_count }} participants
                 </p>
+
+                <p class="text-sm ">
+                    {{ $raffle->winners_count }} winners
+                </p>
+
 
                 <x-ui.button>
                     Join Now
