@@ -6,6 +6,7 @@ use Livewire\Attributes\On;
 
 new class extends Component {
     public ?Raffle $raffle = null;
+    public ?string $winner = null;
 
     public function mount(Raffle $raffle): void
     {
@@ -23,6 +24,24 @@ new class extends Component {
             return;
         }
 
+        $this->roulette();
+
+        $this->getWinner();
+    }
+
+    public function roulette()
+    {
+        $applicants = $this->raffle->applicants()->inRandomOrder()->pluck('email');
+
+        foreach ($applicants as $email) {
+            usleep(80_000);
+
+            $this->stream('winner', $email, true);
+        }
+    }
+
+    public function getWinner(): void
+    {
         $winners = $this->raffle->winners->pluck('applicant_id')->toArray();
 
         $winner = $this->raffle->applicants()->whereNotIn('id', $winners)->inRandomOrder()->first();
@@ -37,6 +56,8 @@ new class extends Component {
             'applicant_id' => $winner->id,
         ]);
 
+        $this->winner = $winner->email;
+
         $this->dispatch('winners:refresh')->to('raffle.winners');
     }
 };
@@ -46,5 +67,12 @@ new class extends Component {
     @can('drawWinner', $raffle)
         <x-ui.error name="winner" />
         <x-ui.button type="button" class="mt-4" wire:click="handle">Draw the winner</x-ui.button>
+
+
+        <x-ui.card class="mt-4 flex items-center align-middle justify-center font-bold text-2xl">
+            <div wire:stream="winner">
+                {{ $winner }}
+            </div>
+        </x-ui.card>
     @endcan
 </div>
