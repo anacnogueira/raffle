@@ -5,6 +5,7 @@ use Livewire\Attributes\Computed;
 use App\Models\Raffle;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Collection as SupportCollection;
+use Livewire\Attributes\On;
 
 new class extends Component {
     public bool $show = false;
@@ -22,6 +23,7 @@ new class extends Component {
     }
 
     #[Computed]
+    #[On('winners:refresh')]
     public function winners(): Collection|SupportCollection
     {
         return $this->raffle->winners()->with('applicant')->get()->map(fn($winner) => $this->show ? $winner->applicant->email : preg_replace('/(?<=.{2}).(?=.*@)/u', '*', $winner->applicant->email));

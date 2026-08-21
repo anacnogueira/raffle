@@ -2,6 +2,7 @@
 
 use Livewire\Component;
 use App\Models\Raffle;
+use Livewire\Attributes\On;
 
 new class extends Component {
     public ?Raffle $raffle = null;
@@ -12,7 +13,7 @@ new class extends Component {
         $this->raffle = $raffle;
     }
 
-    public function getWinner(): void
+    public function handle(): void
     {
         $this->authorize('drawWinner', $this->raffle);
 
@@ -35,6 +36,8 @@ new class extends Component {
         $this->raffle->winners()->create([
             'applicant_id' => $winner->id,
         ]);
+
+        $this->dispatch('winners:refresh')->to('raffle.winners');
     }
 };
 ?>
@@ -42,6 +45,6 @@ new class extends Component {
 <div>
     @can('drawWinner', $raffle)
         <x-ui.error name="winner" />
-        <x-ui.button type="button" class="mt-4" wire:click="getWinner">Draw the winner</x-ui.button>
+        <x-ui.button type="button" class="mt-4" wire:click="handle">Draw the winner</x-ui.button>
     @endcan
 </div>
