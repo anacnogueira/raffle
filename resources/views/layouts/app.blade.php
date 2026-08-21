@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
 
-    @vite(['resources/css/app.css', 'resources/js/app,js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body class="bg-[#FDFDFC] text-[#1b1b18] dark:bg-gray-950 dark: text-gray-200" x-data>

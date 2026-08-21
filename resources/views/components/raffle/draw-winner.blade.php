@@ -34,7 +34,7 @@ new class extends Component {
         $applicants = $this->raffle->applicants()->inRandomOrder()->pluck('email');
 
         foreach ($applicants as $email) {
-            usleep(80_000);
+            usleep(60_000);
 
             $this->stream('winner', $email, true);
         }
@@ -59,6 +59,11 @@ new class extends Component {
         $this->winner = $winner->email;
 
         $this->dispatch('winners:refresh')->to('raffle.winners');
+        $this->js("confetti.addConfetti({
+            confettiColors: [
+                '#ff0a54', '#ff477e', '#ff7096', '#ff85a1', '#fbb1bd', '#f9bec7',
+            ],
+        })");
     }
 };
 ?>

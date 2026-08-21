@@ -26,7 +26,7 @@ new class extends Component {
     #[On('winners:refresh')]
     public function winners(): Collection|SupportCollection
     {
-        return $this->raffle->winners()->with('applicant')->get()->map(fn($winner) => $this->show ? $winner->applicant->email : preg_replace('/(?<=.{2}).(?=.*@)/u', '*', $winner->applicant->email));
+        return $this->raffle->winners()->with('applicant')->latest()->get()->map(fn($winner) => $this->show ? $winner->applicant->email : preg_replace('/(?<=.{2}).(?=.*@)/u', '*', $winner->applicant->email));
     }
 };
 ?>
