@@ -59,12 +59,21 @@ new class extends Component {
     @endif
 
     <br /><br />
-    <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-4">
-        <h3 class="text-lg font-medium text-gray-800 mb-4 dark:text-gray-300">
+    <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-4 " x-data="{ open: false }">
+        <h3 class="text-lg font-medium text-gray-800 mb-4 dark:text-gray-300 cursor-pointer" @click="open = !open">
             Participants
             <span class="text-sm text-gray-500 dark:text-gray-400">({{ count($this->participants) }})</span>
+            <span class="cursor-pointer inline-block ml-2">
+                <svg class="w-5 h-5 inline-block text-gray-500 dark:text-gray-400 transition-transform duration-200"
+                    :class="open ? 'rotate-180' : ''" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+
+                </svg>
+            </span>
         </h3>
-        <ul class="divide-y divide-gray-100">
+        <ul class="divide-y divide-gray-100" x-show="open" x-collapse>
             @foreach ($this->participants as $participant)
                 <li class="hover:bg-gray-50 dark:hover:bg-gray-800">{{ $participant }}</li>
             @endforeach
