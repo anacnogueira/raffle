@@ -11,7 +11,6 @@ use Illuminate\Support\Collection;
 new class extends Component {
     public ?Raffle $raffle = null;
     public ?string $email = null;
-    public ?string $winner = null;
     public bool $success = false;
 
     public function mount(Raffle $raffle): void
@@ -41,32 +40,10 @@ new class extends Component {
     {
         return $this->raffle->applicants()->get()->map(fn($applicant) => preg_replace('/(?<=.{2}).(?=.*@)/u', '*', $applicant->email));
     }
-
-    public function getWinner(): void
-    {
-        $this->authorize('drawWinner', $this->raffle);
-        if ($this->raffle->applicants()->count() < 2) {
-            $this->addError('winner', 'At least two participants are required to perform the draw.');
-            return;
-        }
-
-        $winners = $this->raffle->winners()->pluck('applicant_id')->toArray();
-        $winner = $this->raffle->applicants()->whereNotIn('id', $winners)->inRandomOrder()->first();
-
-        if (!$winner) {
-            $this->addError('winner', 'No more participants available for the draw.');
-            return;
-        }
-
-        $this->raffle->winners()->create([
-            'applicant_id' => $winner->id,
-        ]);
-    }
 };
 ?>
 
 <div>
-    <h1 class="text-2xl font-bold mb-4">Raffle Application :: {{ $raffle->name }}</h1>
     @if ($success)
         <div
             class="flex flex-col items-center justify-center p-4 bg-green-100 dark:bg-green-900 border border-green-400 dark:border-green-600 rounded-lg">
@@ -81,9 +58,12 @@ new class extends Component {
         </form>
     @endif
 
-    <br>
+    <br /><br />
     <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-4">
-        <h3 class="text-lg font-medium text-gray-800 mb-4 dark:text-gray-300">Participants</h3>
+        <h3 class="text-lg font-medium text-gray-800 mb-4 dark:text-gray-300">
+            Participants
+            <span class="text-sm text-gray-500 dark:text-gray-400">({{ count($this->participants) }})</span>
+        </h3>
         <ul class="divide-y divide-gray-100">
             @foreach ($this->participants as $participant)
                 <li class="hover:bg-gray-50 dark:hover:bg-gray-800">{{ $participant }}</li>
@@ -91,13 +71,4 @@ new class extends Component {
         </ul>
     </div>
     <br />
-
-    <livewire:raffle.winners :raffle="$raffle" />
-
-
-    @can('drawWinner', $raffle)
-        <x-ui.error name="winner" />
-        <x-ui.button type="button" class="mt-4" wire:click="getWinner">Draw the winner</x-ui.button>
-    @endcan
-
 </div>

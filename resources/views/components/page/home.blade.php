@@ -16,7 +16,7 @@ new class extends Component {
 
 <div class="grid grid-cols-3 gap-4">
     @foreach ($this->raffles as $raffle)
-        <x-ui.card href="{{ route('raffle.application', $raffle) }}">
+        <x-ui.card href="{{ route('raffle', $raffle) }}">
             <h1 class="text-lg font-bold mb-4">
                 {{ $raffle->id }} - {{ Str::limit($raffle->name, 10) }}
             </h1>

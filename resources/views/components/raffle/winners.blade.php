@@ -49,8 +49,6 @@ new class extends Component {
             @foreach ($this->winners as $winner)
                 <p class="mt-2 text-gray-700 dark:text-gray-300">{{ $winner }}</p>
             @endforeach
-
-
         </div>
     @endif
 </div>
