@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Applicant;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use function Illuminate\Support\fake;
 
 /**
  * @extends Factory<Applicant>

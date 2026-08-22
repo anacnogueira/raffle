@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Raffle;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use function Illuminate\Support\fake;
 
 /**
  * @extends Factory<Raffle>
